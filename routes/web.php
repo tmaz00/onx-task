@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClientController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,3 +22,5 @@ Route::get('/', function () {
 Route::get('/dbconn', function(){
     return view('dbconn');
 });
+
+Route::resource('clients', ClientController::class);
