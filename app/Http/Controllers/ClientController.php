@@ -15,8 +15,8 @@ class ClientController extends Controller
      */
     public function index()
     {
-        $clients = Client::all();
-        return $clients;
+        $clients = Client::orderBy('id')->paginate(5);
+        return view('clients.index', compact('clients'));
     }
 
     /**
@@ -26,7 +26,7 @@ class ClientController extends Controller
      */
     public function create()
     {
-        //
+        return view('clients.create');
     }
 
     /**
@@ -37,14 +37,15 @@ class ClientController extends Controller
      */
     public function store(StoreClientRequest $request)
     {
-        $client = new Client();
-        $client->name = $request->name;
-        $client->surname = $request->surname;
-        $client->email = $request->email;
-        $client->phone = $request->phone;
-        if ($client->save()) {
-            return true;
-        }
+        $request->validate([
+            'name' => 'required',
+            'surname' => 'required',
+            'email' => 'required',
+        ]);
+        
+        Client::create($request->post());
+
+        return redirect() -> route('clients.index')->with('success', 'Client has been added successfully');
     }
 
     /**
@@ -55,7 +56,7 @@ class ClientController extends Controller
      */
     public function show(Client $client)
     {
-        return view('client.client', ['client' => $client]);
+        return view('clients.show', compact('client'));
     }
 
     /**
@@ -66,7 +67,7 @@ class ClientController extends Controller
      */
     public function edit(Client $client)
     {
-        //
+        return view('clients.edit', compact('client'));
     }
 
     /**
@@ -78,9 +79,15 @@ class ClientController extends Controller
      */
     public function update(UpdateClientRequest $request, Client $client)
     {
-        if($client->fill($request->all())->save()){
-            return true;
-        }
+        $request->validate([
+            'name' => 'required',
+            'surname' => 'required',
+            'email' => 'required',
+        ]);
+
+        $client->fill($request->post())->save();
+
+        return redirect() -> route('clients.index')->with('success', 'Client has been updated successfully');
     }
 
     /**
@@ -91,8 +98,7 @@ class ClientController extends Controller
      */
     public function destroy(Client $client)
     {
-        if($client->delete()){
-            return true;
-        }
+        $client->delete();
+        return redirect()->route('clients.index')->with('success', 'Client has been deleted successfully');
     }
 }

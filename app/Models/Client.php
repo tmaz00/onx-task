@@ -9,15 +9,6 @@ class Client extends Model
 {
     use HasFactory;
 
-
-    const CREATED_AT = 'creation_date';
-    const UPDATED_AT = 'updated_date';
-    
-    protected $name = 'name';
-    protected $surname = 'surname';
-    protected $email = 'email';
-    protected $phone = 'phone_num';
-
     /**
      * Table associated with the model.
      * 
